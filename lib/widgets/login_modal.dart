@@ -91,11 +91,6 @@ class _LoginModalState extends State<LoginModal> {
                 if (value == '') {
                   return 'This field is required.';
                 }
-                if (!RegExp(
-                        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@vitstudent.ac.in")
-                    .hasMatch(value)) {
-                  return 'Please enter a valid VIT gmail id.';
-                }
               },
               onSaved: (email) {
                 _credentials['email'] = email;

@@ -101,10 +101,13 @@ class _RegisterModalState extends State<RegisterModal> {
                   return 'This field is required.';
                 }
                 if (!RegExp(
-                        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@vitstudent.ac.in")
+                        r"^([a-z].*[.][a-z].*[2][0][1-2][0-9]@vitstudent.ac.in$)")
                     .hasMatch(value)) {
                   return 'Please enter a valid VIT gmail id.';
                 }
+              },
+              onSaved: (value) {
+                _credentials['email'] = value;
               },
             ),
           ),
@@ -155,6 +158,9 @@ class _RegisterModalState extends State<RegisterModal> {
                 if (value.length < 6) {
                   return 'Password should be of minimum length 6.';
                 }
+              },
+              onSaved: (value) {
+                _credentials['password'] = value;
               },
             ),
           ),

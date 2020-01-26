@@ -12,10 +12,19 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> signUp(Map<String, String> _cred) async {
-    final url = 'https://jai9399-reviewsapi.herokuapp.com/signup';
-    final response = await http.post(url, body: json.encode(_cred));
+    final url = 'https://jai9399-reviewsapi.herokuapp.com';
+    // final response = await http.post(url, body: json.encode(_cred));
+    final response2 = await http.post(
+      '$url/signup',
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Credentials': 'true',
+      },
+      body: json.encode(_cred),
+    );
+    print(response2);
     print(1);
-    print(response.body);
+    // print(response.body);
   }
 
   void logout() {}
