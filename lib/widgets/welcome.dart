@@ -12,7 +12,7 @@ class Welcome extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Text(
-          'VIT Faculty Review System OK',
+          'VIT Faculty Review System',
           textAlign: TextAlign.center,
           style: TextStyle(
             color: Colors.white70,
