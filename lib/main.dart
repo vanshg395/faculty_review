@@ -12,13 +12,18 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
       value: Auth(),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        initialRoute: LandingScreen.routeName,
-        // initialRoute: MyHomePage.routeName,
-        routes: {
-          LandingScreen.routeName: (context) => LandingScreen(),
-          MyHomePage.routeName: (context) => MyHomePage(),
+      child: Consumer<Auth>(
+        builder: (ctx, auth, _) {
+          print(auth.isLoggedIn);
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            home: auth.isLoggedIn ? MyHomePage() : LandingScreen(),
+            // initialRoute: LandingScreen.routeName,
+            routes: {
+              // LandingScreen.routeName: (context) => LandingScreen(),
+              MyHomePage.routeName: (context) => MyHomePage(),
+            },
+          );
         },
       ),
     );
