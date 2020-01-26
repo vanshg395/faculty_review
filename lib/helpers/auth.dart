@@ -14,6 +14,7 @@ class Auth with ChangeNotifier {
   Future<void> signUp(Map<String, String> _cred) async {
     final url = 'https://jai9399-reviewsapi.herokuapp.com';
     // final response = await http.post(url, body: json.encode(_cred));
+    print('RS');
     final response2 = await http.post(
       '$url/signup',
       headers: {
