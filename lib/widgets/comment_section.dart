@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 
+import './faculty_overview.dart';
+
 class CommentSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        // constraints: BoxConstraints(
-        //   maxHeight: double.infinity,
-        //   maxWidth: double.infinity,
-        // ),
+        child: FacultyOverview(),
         color: Colors.green,
-        // child: Text('asdf'),
       ),
     );
   }

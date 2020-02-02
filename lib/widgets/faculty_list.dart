@@ -1,4 +1,11 @@
+import 'dart:html';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../helpers/auth.dart';
+import '../helpers/faculties.dart';
 
 class FacultyList extends StatefulWidget {
   @override
@@ -6,6 +13,30 @@ class FacultyList extends StatefulWidget {
 }
 
 class _FacultyListState extends State<FacultyList> {
+  var faculty = [];
+  var dispFaculty = [];
+  bool _isLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(
+      Duration(seconds: 0),
+      () async {
+        await Provider.of<Faculty>(context).getFaculties();
+        getFaculties();
+      },
+    );
+  }
+
+  void getFaculties() {
+    faculty = Provider.of<Faculty>(context).faculties;
+    setState(() {
+      dispFaculty = faculty;
+      _isLoaded = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -15,7 +46,9 @@ class _FacultyListState extends State<FacultyList> {
         children: <Widget>[
           AppBar(
             backgroundColor: Colors.teal,
-            title: Text('Hey'),
+            title: FittedBox(
+              child: Text(Provider.of<Auth>(context, listen: false).userId),
+            ),
             automaticallyImplyLeading: false,
             actions: <Widget>[
               FlatButton(
@@ -23,7 +56,9 @@ class _FacultyListState extends State<FacultyList> {
                   'Logout',
                   style: TextStyle(color: Colors.white),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Provider.of<Auth>(context).logout();
+                },
               )
             ],
           ),
@@ -36,6 +71,17 @@ class _FacultyListState extends State<FacultyList> {
               maxWidth: 400,
             ),
             child: TextField(
+              onChanged: (value) {
+                final temp = faculty.where((element) {
+                  return element['facinfo']['name']
+                      .toString()
+                      .toLowerCase()
+                      .contains(value.toLowerCase());
+                }).toList();
+                setState(() {
+                  dispFaculty = temp;
+                });
+              },
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 16,
@@ -44,7 +90,6 @@ class _FacultyListState extends State<FacultyList> {
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                 hintText: 'Search',
-                suffixIcon: Icon(Icons.search),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.grey),
                   borderRadius: BorderRadius.circular(10),
@@ -63,18 +108,51 @@ class _FacultyListState extends State<FacultyList> {
                   color: Colors.redAccent,
                 ),
               ),
-              keyboardType: TextInputType.emailAddress,
-              // validator: (value) {
-              //   if (value == '') {
-              //     return 'This field is required.';
-              //   }
-              //   if (!RegExp(
-              //           r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@vitstudent.ac.in")
-              //       .hasMatch(value)) {
-              //     return 'Please enter a valid VIT gmail id.';
-              //   }
-              // },
             ),
+          ),
+          Expanded(
+            child: _isLoaded
+                ? ListView.builder(
+                    // shrinkWrap: false,
+                    scrollDirection: Axis.vertical,
+                    itemBuilder: (context, i) {
+                      return Container(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 5, horizontal: 30),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            radius: 30,
+                            backgroundImage: NetworkImage(
+                              dispFaculty[i]['facinfo']['img']
+                                  .toString()
+                                  .replaceFirst(
+                                      'https://jai9399ftpimages.herokuapp.com/',
+                                      'https://jai9399-reviewsapi.herokuapp.com/')
+                                  .trimRight(),
+                            ),
+                          ),
+                          title: Text(
+                            dispFaculty[i]['facinfo']['name'],
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          subtitle: Text(
+                            dispFaculty[i]['facinfo']['post'],
+                            style: TextStyle(color: Colors.white70),
+                          ),
+                          onTap: () async {
+                            await Provider.of<Faculty>(context)
+                                .selectFaculty(dispFaculty[i]['_id']);
+                          },
+                        ),
+                      );
+                    },
+                    itemCount: dispFaculty.length,
+                  )
+                : Center(
+                    child: CircularProgressIndicator(
+                      backgroundColor: Colors.white,
+                    ),
+                  ),
           ),
         ],
       ),
