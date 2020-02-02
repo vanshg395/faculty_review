@@ -12,6 +12,11 @@ class Faculty with ChangeNotifier {
     return [...faculty];
   }
 
+  List<dynamic> get comments {
+    List<dynamic> comments = selectedFaculty['comments'];
+    return [...comments];
+  }
+
   Future<void> getFaculties() async {
     var response = await HttpRequest.request(
       'https://jai9399-reviewsapi.herokuapp.com/faculty',
